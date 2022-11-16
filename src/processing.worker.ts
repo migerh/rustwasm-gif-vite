@@ -30,19 +30,13 @@ const reportProgress = (id: string, currentFrame: number) => {
   });
 }
 
-const callbacks = {
-  registerProgress,
-  reportProgress,
-};
-console.log(callbacks);
-
 // Once we get a message from the main thread we can start processing the gif.
 self.addEventListener('message', async (event) => {
   try {
     const { id, name, buffer } = event.data;
 
     // Reverse the gif.
-    const reversedBuffer = reverse_gif(id, name, buffer);
+    const reversedBuffer = reverse_gif(id, name, buffer, registerProgress, reportProgress);
 
     // Tell the main thread that we're finished.
     self.postMessage({
@@ -53,12 +47,14 @@ self.addEventListener('message', async (event) => {
       reversedBuffer
     });
   } catch (e) {
-    self.postMessage({
-      type: 'error',
-      id: event.data.id,
-      name: event.data.name,
-      message: e.message,
-      stack: e.stack
-    })
+    if (e instanceof Error) {
+      self.postMessage({
+        type: 'error',
+        id: event.data.id,
+        name: event.data.name,
+        message: e.message,
+        stack: e.stack
+      });
+    }
   }
 });

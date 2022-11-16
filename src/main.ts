@@ -12,11 +12,11 @@ import { GifDisplay } from './gifDisplay';
 
 // First we initialize the gif processor and…
 const gifProcessor = new GifReverser(),
-  rootNodeId = 'resultContainer';
+  rootNodeId = 'result-container';
 
 // …define what happens when a job is finished.
-const createJobFinishedHandler = (display: GifDisplay) => async function(data: ReversedGif) {
-  const {name, buffer, reversedBuffer} = data;
+const createJobFinishedHandler = (display: GifDisplay) => async function (data: ReversedGif) {
+  const { name, buffer, reversedBuffer } = data;
   const originalGifData = await FileConverter.convertToDataUrl(buffer);
   const reversedGifData = await FileConverter.convertToDataUrl(reversedBuffer);
 
@@ -29,7 +29,7 @@ const createJobProgressHandler = (display: GifDisplay) => (item: ProgressEvent) 
 };
 
 const createErrorHandler = (display: GifDisplay) => (event: ProcessingErrorEvent) => {
-  const {message, stack} = event;
+  const { message, stack } = event;
   display.showError(message, stack);
 };
 

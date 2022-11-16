@@ -99,6 +99,10 @@ button:focus-visible {
     color: #213547;
     background-color: #ffffff;
   }
+  #gif-file-drop {
+    background-color: #a1a1a1;
+    border: 1px solid black;
+  }
   a:hover {
     color: #747bff;
   }

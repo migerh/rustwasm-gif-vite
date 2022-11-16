@@ -11,14 +11,6 @@ extern "C" {
     // Access console.log() from the wasm module
     #[wasm_bindgen(js_namespace = console)]
     fn log(s: &str);
-
-    // Tell the web page how many frames in total the gif has
-    #[wasm_bindgen(js_name = registerProgress, js_namespace = callbacks)]
-    fn register_progress(id: &str, name: &str, number_of_frames: usize);
-
-    // Report how many frames we already encoded.
-    #[wasm_bindgen(js_name = reportProgress, js_namespace = callbacks)]
-    fn report_progress(id: &str, current_frame: usize);
 }
 
 /// Tuples are apparently not supported by wasm-bindgen atm
@@ -164,6 +156,7 @@ fn gif_from_frames(
     height: u16,
     global_palette: Vec<u8>,
     id: &str,
+    report: &js_sys::Function,
 ) -> Vec<u8> {
     let mut buffer = Vec::new();
     {
@@ -176,7 +169,7 @@ fn gif_from_frames(
             frame.delay = delay;
             encoder.write_frame(&frame).unwrap();
 
-            report_progress(id, i + 1);
+            report.call2(&JsValue::NULL, &JsValue::from(id), &JsValue::from(i + 1)).unwrap();
         }
     }
 
@@ -185,7 +178,7 @@ fn gif_from_frames(
 
 /// Reverses a gif
 #[wasm_bindgen]
-pub fn reverse_gif(id: &str, name: &str, data: &[u8]) -> Vec<u8> {
+pub fn reverse_gif(id: &str, name: &str, data: &[u8], register: &js_sys::Function, report: &js_sys::Function) -> Vec<u8> {
     console_error_panic_hook::set_once();
 
     log("enter");
@@ -197,10 +190,10 @@ pub fn reverse_gif(id: &str, name: &str, data: &[u8]) -> Vec<u8> {
     log("read frames");
     let mut frames = collect_frames(&mut reader, width, height);
 
-    register_progress(id, name, frames.len());
+    register.call3(&JsValue::NULL, &JsValue::from(id), &JsValue::from(name), &JsValue::from(frames.len())).unwrap();
 
     frames.reverse();
 
     log("write buffer");
-    gif_from_frames(&mut frames, width, height, global_palette, id)
+    gif_from_frames(&mut frames, width, height, global_palette, id, report)
 }

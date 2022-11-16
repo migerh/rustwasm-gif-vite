@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "cargo": "cargo build --target wasm32-unknown-unknown --release",
     "bindgen": "wasm-bindgen target/wasm32-unknown-unknown/release/gif.wasm --target bundler --out-dir ./pkg",
-    "build-wasm": "npm run cargo && npm run bindgen"
+    "build-wasm": "npm run cargo && npm run bindgen",
+    "build-wasm-pack": "wasm-pack build -t bundler"
   },
   "devDependencies": {
     "typescript": "^4.6.4",
