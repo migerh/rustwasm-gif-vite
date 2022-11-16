@@ -6,5 +6,12 @@ export default defineConfig({
   plugins: [
     wasm(),
     topLevelAwait()
-  ]
+  ],
+  worker: {
+    format: "es",
+    plugins: [
+      wasm(),
+      topLevelAwait()
+    ]
+  }
 });
