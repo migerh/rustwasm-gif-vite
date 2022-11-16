@@ -15,6 +15,18 @@
   -webkit-text-size-adjust: 100%;
 }
 
+#gif-file-drop {
+  width: 250px;
+  height: 250px;
+  background-color: #363636;
+  border: 1px solid #a1a1a1;
+  text-align: center;
+  display: flex;
+  place-items: center;
+  justify-content: center;
+  margin: 30px;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -27,7 +39,6 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
